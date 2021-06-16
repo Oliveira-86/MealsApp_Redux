@@ -3,6 +3,10 @@ import { View, Text } from   'react-native'
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+import StackFilterNav from './StackFilterNav';
+import DrawerContent from './DrawerContent';
 
 import { CATEGORIES, MEALS } from '../data/dummy-data';
 
@@ -11,8 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import Categories from '../screens/Categories';
 import CategoryMeals from '../screens/CategoryMealsScreen';
 import MealDetails from '../screens/MealDetailsScreen';
-import Favorites from '../screens/FavoritesScreen';
 import FavNavigation from './FavNavigation';
+
 
 import HeaderButton from '../components/HeaderButton';
 import colors from '../styles/colors';
@@ -20,7 +24,7 @@ import fonts from '../styles/fonts';
 
 const Stack = createStackNavigator();
 
-const MealsNavigation = () => {
+const MealsNavigation = ({ navigation }) => {
 
     
   
@@ -30,16 +34,21 @@ const MealsNavigation = () => {
                 name="Categories" 
                 component={Categories} 
                 options={{
-                    headerTitle: 'Meal Categories',
+                    headerTitle: 'Category Meals',
                     headerStyle: {
                         backgroundColor: 'white',
                         elevation: 8, 
                     },
                     headerTintColor: colors.primaryColor,
-                    headerRight: () => (
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: fonts.bold,
+                    headerLeft: () => (
                         <HeaderButton
                             name="ios-menu" 
-                            onPress={() => {}}
+                            onPress={() => navigation.openDrawer()}
+                            style={{ marginRight: 15 }}
+                            color={colors.primaryColor}
+                            size={22}
                         />
                     )
                    
@@ -90,7 +99,7 @@ const MealsNavigation = () => {
     );
 };
 
-const MealsFavTabNavigation = () => {
+export const  MealsFavTabNavigation = () => {
   
     const  Tab = createBottomTabNavigator();
 
@@ -170,4 +179,16 @@ const MealsFavTabNavigation = () => {
     );
 };
 
-export default MealsFavTabNavigation;
+const MainNav = () => {
+
+    const Drawer = createDrawerNavigator();
+
+    return (
+        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />} >
+            <Drawer.Screen name="Categories"  component={MealsFavTabNavigation}/>
+            <Drawer.Screen name="Filters" component={StackFilterNav} />
+        </Drawer.Navigator>
+    )
+}
+
+export default MainNav;

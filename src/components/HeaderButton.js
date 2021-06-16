@@ -9,10 +9,10 @@ const HeaderButton = (props) => {
     return (
         <Ionicons.Button {...props} 
             name={props.name}
-            size={30}
-            color={colors.primaryColor}
+            size={props.size}
+            color={props.color}
             backgroundColor='white'
-            style={{ right: 10 }}
+            style={{ marginLeft: 15 }}
         />
     );
 };

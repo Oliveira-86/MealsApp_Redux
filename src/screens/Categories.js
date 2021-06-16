@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 
+import { MealsFavTabNavigation } from '../navigation/MealsNavigation.js';
+
 import CategoryGridTile from '../components/CategoryGridTile.js';
 
 import { CATEGORIES } from '../data/dummy-data.js'; 

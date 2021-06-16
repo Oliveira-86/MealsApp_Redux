@@ -1,7 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+
+import fonts from '../styles/fonts';
+import colors from '../styles/colors';
 
 import { MEALS } from '../data/dummy-data';
+
+import DefaultText from '../components/DefaultText';
+
+const ListItem = (props) =>{
+    return (
+        <View style={styles.listItem}>
+            <DefaultText>{props.children}</DefaultText>
+        </View>
+    );
+};
 
 const MealDetailsScreen = (props) => {
     
@@ -10,18 +23,56 @@ const MealDetailsScreen = (props) => {
     const selectedMeal = MEALS.find((meal) => meal.id === mealId);
  
     return (
-        <View style={styles.container}>
-            <Text>{selectedMeal.title}</Text>
-        </View>
+        <ScrollView style={{ flex: 1, backgroundColor: 'white'}}>
+            <Image 
+                style={styles.image}    
+                source={{ uri: selectedMeal.imageUrl }} 
+            />
+            <View style={styles.details}>
+                <DefaultText>{selectedMeal.duration}m</DefaultText>
+                <DefaultText>{selectedMeal.complexity.toUpperCase()}</DefaultText>
+                <DefaultText>{selectedMeal.affordability.toUpperCase()}</DefaultText>
+            </View>
+            <Text style={styles.title}>Ingredients</Text>
+            {selectedMeal.ingredients.map((ingredient) => (
+                <ListItem key={ingredient}>{ingredient}</ListItem>
+            ))}
+            
+            <Text style={styles.title}>Steps</Text>
+            {selectedMeal.steps.map((steps) => (
+                <ListItem key={steps}>{steps}</ListItem>
+            ))}
+            
+        </ScrollView>
     );
 };
 
 export default MealDetailsScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+    image: {
+        width: '100%',
+        height: 200
+    },
+
+    details: {
+        flexDirection: 'row',
+        padding: 15,
+        justifyContent: 'space-around'
+    },
+
+    title: {
+        fontFamily: fonts.bold,
+        fontSize: 20,
+        textAlign: 'center'
+    },
+
+    listItem: {
+        marginVertical: 10,
+        marginHorizontal: 20,
+        borderColor: colors.primaryColor,
+        borderWidth: 1,
+        padding: 12,
+        borderRadius: 20,
     }
 });
