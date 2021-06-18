@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useLayoutEffect, useCallback } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 
 import fonts from '../styles/fonts';
 import colors from '../styles/colors';
 
-import { MEALS } from '../data/dummy-data';
+import { useSelector, useDispatch } from 'react-redux';
 
 import DefaultText from '../components/DefaultText';
+import { toggleFavorite } from '../store/actions/meals';
+
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import HeaderButton from '../components/HeaderButton';
 
 const ListItem = (props) =>{
+
     return (
         <View style={styles.listItem}>
             <DefaultText>{props.children}</DefaultText>
@@ -17,11 +22,34 @@ const ListItem = (props) =>{
 };
 
 const MealDetailsScreen = (props) => {
-    
-    const mealId = props.route.params.mealId;
 
-    const selectedMeal = MEALS.find((meal) => meal.id === mealId);
+    const availableMeals = useSelector(state => state.meals.meals);
+    const mealId = props.route?.params.mealId;
+
+    const selectedMeal = availableMeals.find((meal) => meal.id === mealId);
  
+    const dispatch = useDispatch();
+
+    const toggleFavoriteHandler = useCallback(() => {
+        dispatch(toggleFavorite(mealId));
+    }, [dispatch, mealId]);
+
+    useLayoutEffect(() => {
+        props.navigation.setOptions({
+          headerRight: () => {
+            return (
+              <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                <Item
+                  title="Favorite"
+                  iconName="ios-star"
+                  onPress={toggleFavoriteHandler}
+                />
+              </HeaderButtons>
+            );
+          },
+        });
+      }, [toggleFavoriteHandler]);
+
     return (
         <ScrollView style={{ flex: 1, backgroundColor: 'white'}}>
             <Image 

@@ -1,9 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
-
-import colors from '../styles/colors';
 
 const HeaderButton = (props) => {
     return (
@@ -12,11 +9,9 @@ const HeaderButton = (props) => {
             size={props.size}
             color={props.color}
             backgroundColor='white'
-            style={{ marginLeft: 15 }}
+            style={props.style}
         />
     );
 };
 
 export default HeaderButton;
-
-const styles = StyleSheet.create({});

@@ -16,7 +16,8 @@ const MealsList = (props) => {
                 image={itemData.item.imageUrl} 
                 onSelectMeal={() => {
                     props.navigation.navigate('MealDetails', {
-                        mealId: itemData.item.id
+                        mealId: itemData.item.id,
+                        mealTitle: itemData.item.title
                     })
                 }}
             />
@@ -27,7 +28,7 @@ const MealsList = (props) => {
         <View style={styles.container}>
            <FlatList 
                 data={props.listData}
-                keyExtractor={(item, _) => item.id}
+                keyExtractor={(item, _) => String(item.id)}
                 renderItem={renderMealItem}
                 style={{ width: '100%' }}
                 showsVerticalScrollIndicator={false}

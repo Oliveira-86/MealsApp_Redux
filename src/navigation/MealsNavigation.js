@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from   'react-native'
+import { View, Text } from 'react-native'
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,7 +8,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import StackFilterNav from './StackFilterNav';
 import DrawerContent from './DrawerContent';
 
-import { CATEGORIES, MEALS } from '../data/dummy-data';
+import { CATEGORIES } from '../data/dummy-data';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -17,7 +17,7 @@ import CategoryMeals from '../screens/CategoryMealsScreen';
 import MealDetails from '../screens/MealDetailsScreen';
 import FavNavigation from './FavNavigation';
 
-
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../components/HeaderButton';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
@@ -26,37 +26,37 @@ const Stack = createStackNavigator();
 
 const MealsNavigation = ({ navigation }) => {
 
-    
-  
+
+
     return (
         <Stack.Navigator>
-            <Stack.Screen 
-                name="Categories" 
-                component={Categories} 
+            <Stack.Screen
+                name="Categories"
+                component={Categories}
                 options={{
                     headerTitle: 'Category Meals',
                     headerStyle: {
                         backgroundColor: 'white',
-                        elevation: 8, 
+                        elevation: 8,
                     },
                     headerTintColor: colors.primaryColor,
                     headerTitleAlign: 'center',
                     headerTitleStyle: fonts.bold,
                     headerLeft: () => (
                         <HeaderButton
-                            name="ios-menu" 
+                            name="ios-menu"
                             onPress={() => navigation.openDrawer()}
-                            style={{ marginRight: 15 }}
+                            style={{ left: 10 }}
                             color={colors.primaryColor}
-                            size={22}
+                            size={28}
                         />
                     )
-                   
+
                 }}
             />
-            <Stack.Screen 
-                name="CategoryMeals" 
-                component={CategoryMeals} 
+            <Stack.Screen
+                name="CategoryMeals"
+                component={CategoryMeals}
                 options={(navigationData) => {
                     const catId = navigationData.route.params.categoryId;
 
@@ -69,39 +69,24 @@ const MealsNavigation = ({ navigation }) => {
                         },
                         headerTintColor: colors.primaryColor
                     }
-                }}  
-            />
-            <Stack.Screen 
-                name="MealDetails" 
-                component={MealDetails} 
-                options={(navigationData) => {
-                    const mealId = navigationData.route.params.mealId;
-                    const selectedMeal = MEALS.find((meal) => meal.id === mealId);
-
-                    return {
-                        headerTitle: selectedMeal.title,
-                        headerStyle: {
-                            backgroundColor: 'white'
-                        },
-                        headerTintColor: colors.primaryColor,
-                        headerRight: () => (
-                            <HeaderButton
-                                name="ios-star-outline" 
-                                onPress={() => {
-                                    console.log('Egberto está aqui!!')
-                                }}
-                            />
-                        )
-                    }
                 }}
+            />
+            <Stack.Screen
+                name="MealDetails"
+                component={MealDetails}
+                options={({ route }) => ({
+                    title: route.params.mealTitle,
+                    id: route.params.mealId,
+                    headerBackTitle: "Back",
+                  })}
             />
         </Stack.Navigator>
     );
 };
 
-export const  MealsFavTabNavigation = () => {
-  
-    const  Tab = createBottomTabNavigator();
+export const MealsFavTabNavigation = () => {
+
+    const Tab = createBottomTabNavigator();
 
     return (
         <Tab.Navigator
@@ -118,62 +103,62 @@ export const  MealsFavTabNavigation = () => {
                 }
             }}
         >
-            <Tab.Screen 
+            <Tab.Screen
                 options={{
-                    tabBarIcon: ({focused}) => {
+                    tabBarIcon: ({ focused }) => {
                         return (
-                            <View 
+                            <View
                                 style={{ alignItems: 'center', justifyContent: 'center' }}
                             >
-                                <Ionicons 
-                                    name='ios-restaurant' 
-                                    size={22} 
+                                <Ionicons
+                                    name='ios-restaurant'
+                                    size={22}
                                     color={focused ? colors.primaryColor : '#748c94'}
                                 />
                                 <Text
                                     style={{
-                                        color: focused ? colors.primaryColor : '#748c94', 
-                                        fontFamily: fonts.semi, 
+                                        color: focused ? colors.primaryColor : '#748c94',
+                                        fontFamily: fonts.semi,
                                         fontSize: 10
                                     }}
                                 >
                                     Category
                                 </Text>
-                           </View>
+                            </View>
                         );
                     }
                 }}
-                name="Meals" 
+                name="Meals"
                 component={MealsNavigation}
-                 
+
             />
-            <Tab.Screen 
+            <Tab.Screen
                 options={{
-                    tabBarIcon: ({focused}) => {
+                    tabBarIcon: ({ focused }) => {
                         return (
-                           <View 
-                            style={{ alignItems: 'center', justifyContent: 'center' }}
-                           >
-                                <Ionicons 
-                                    name='ios-star' 
-                                    size={22} 
+                            <View
+                                style={{ alignItems: 'center', justifyContent: 'center' }}
+                            >
+                                <Ionicons
+                                    name='ios-star'
+                                    size={22}
                                     color={focused ? colors.primaryColor : '#748c94'}
                                 />
                                 <Text
                                     style={{
-                                        color: focused ? colors.primaryColor : '#748c94', 
-                                        fontFamily: fonts.semi, 
+                                        color: focused ? colors.primaryColor : '#748c94',
+                                        fontFamily: fonts.semi,
                                         fontSize: 10
                                     }}
                                 >
                                     Favorites
                                 </Text>
-                           </View>
+                            </View>
                         );
                     }
                 }}
-                name="FavNavigation" 
-                component={FavNavigation} 
+                name="FavNavigation"
+                component={FavNavigation}
             />
         </Tab.Navigator>
     );
@@ -185,7 +170,7 @@ const MainNav = () => {
 
     return (
         <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />} >
-            <Drawer.Screen name="Categories"  component={MealsFavTabNavigation}/>
+            <Drawer.Screen name="Categories" component={MealsFavTabNavigation} />
             <Drawer.Screen name="Filters" component={StackFilterNav} />
         </Drawer.Navigator>
     )
