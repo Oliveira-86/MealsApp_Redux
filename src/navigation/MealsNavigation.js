@@ -17,7 +17,6 @@ import CategoryMeals from '../screens/CategoryMealsScreen';
 import MealDetails from '../screens/MealDetailsScreen';
 import FavNavigation from './FavNavigation';
 
-import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../components/HeaderButton';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';

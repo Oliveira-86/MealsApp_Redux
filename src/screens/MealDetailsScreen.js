@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useCallback } from 'react';
+import React, { useLayoutEffect, useCallback, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 
 import fonts from '../styles/fonts';
@@ -9,10 +9,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import DefaultText from '../components/DefaultText';
 import { toggleFavorite } from '../store/actions/meals';
 
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 
-const ListItem = (props) =>{
+const ListItem = (props) => {
 
     return (
         <View style={styles.listItem}>
@@ -21,13 +20,17 @@ const ListItem = (props) =>{
     );
 };
 
+
 const MealDetailsScreen = (props) => {
 
     const availableMeals = useSelector(state => state.meals.meals);
-    const mealId = props.route?.params.mealId;
+    const mealId = props.route.params.mealId;
+    const currentMealsFav = useSelector(state =>
+        state.meals.favoriteMeals.some(meal => meal.id === mealId)
+    );
 
     const selectedMeal = availableMeals.find((meal) => meal.id === mealId);
- 
+
     const dispatch = useDispatch();
 
     const toggleFavoriteHandler = useCallback(() => {
@@ -36,25 +39,31 @@ const MealDetailsScreen = (props) => {
 
     useLayoutEffect(() => {
         props.navigation.setOptions({
-          headerRight: () => {
-            return (
-              <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                  title="Favorite"
-                  iconName="ios-star"
-                  onPress={toggleFavoriteHandler}
-                />
-              </HeaderButtons>
-            );
-          },
+         headerRight: () => {
+            const isFavorite = props.route.params.isFav;    
+                return (
+                    <HeaderButton
+                        color={colors.primaryColor}
+                        name={isFavorite ? 'ios-star' : 'ios-star-outline'}
+                        size={28}
+                        onPress={toggleFavoriteHandler}
+                    />
+                );
+            },
+            headerTintColor: colors.primaryColor,
         });
-      }, [toggleFavoriteHandler]);
+    }, [toggleFavoriteHandler]);
+
+
+    useEffect(() => {
+        props.navigation.setParams({ isFav: currentMealsFav });
+    }, [currentMealsFav])
 
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: 'white'}}>
-            <Image 
-                style={styles.image}    
-                source={{ uri: selectedMeal.imageUrl }} 
+        <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+            <Image
+                style={styles.image}
+                source={{ uri: selectedMeal.imageUrl }}
             />
             <View style={styles.details}>
                 <DefaultText>{selectedMeal.duration}m</DefaultText>
@@ -65,12 +74,12 @@ const MealDetailsScreen = (props) => {
             {selectedMeal.ingredients.map((ingredient) => (
                 <ListItem key={ingredient}>{ingredient}</ListItem>
             ))}
-            
+
             <Text style={styles.title}>Steps</Text>
             {selectedMeal.steps.map((steps) => (
                 <ListItem key={steps}>{steps}</ListItem>
             ))}
-            
+
         </ScrollView>
     );
 };
